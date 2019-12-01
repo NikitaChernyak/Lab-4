@@ -29,7 +29,6 @@ public class MainFrame extends JFrame {
 	// Пункты меню
 	private JCheckBoxMenuItem showAxisMenuItem;
 	private JCheckBoxMenuItem showMarkersMenuItem;
-	private JCheckBoxMenuItem showAdditionalGraphicMenuItem;
 	// Компонент-отображатель графика
 	private GraphicsDisplay display = new GraphicsDisplay();
 	// Флаг, указывающий на загруженность данных графика
@@ -73,20 +72,10 @@ public class MainFrame extends JFrame {
 				display.setShowAxis(showAxisMenuItem.isSelected());
 			}
 		};
-		
+
 		showAxisMenuItem = new JCheckBoxMenuItem(showAxisAction);
 		graphicsMenu.add(showAxisMenuItem);
 		showAxisMenuItem.setSelected(true);
-		
-		Action showAdditionalGraphicAction = new AbstractAction("Отображать график функции 'модуль f'") {
-			public void actionPerformed(ActionEvent event) {
-				display.setShowAdditionalGraphic(showAdditionalGraphicMenuItem.isSelected());
-			}
-		};
-
-		showAdditionalGraphicMenuItem = new JCheckBoxMenuItem(showAdditionalGraphicAction);
-		graphicsMenu.add(showAdditionalGraphicMenuItem);
-		showAdditionalGraphicMenuItem.setSelected(true);
 		
 		// Повторить действия для элемента "Показывать маркеры точек"
 		Action showMarkersAction = new AbstractAction("Показывать маркеры точек") {
@@ -99,7 +88,6 @@ public class MainFrame extends JFrame {
 		showMarkersMenuItem = new JCheckBoxMenuItem(showMarkersAction);
 		graphicsMenu.add(showMarkersMenuItem);
 		showMarkersMenuItem.setSelected(true);
-		
 		// Зарегистрировать обработчик событий, связанных с меню "График"
 		graphicsMenu.addMenuListener(new GraphicsMenuListener());
 		// Установить GraphicsDisplay в центр граничной компоновки
@@ -164,13 +152,12 @@ public class MainFrame extends JFrame {
 			// Доступность или недоступность элементов меню "График" определяется загруженностью данных
 			showAxisMenuItem.setEnabled(fileLoaded);
 			showMarkersMenuItem.setEnabled(fileLoaded);
-			showAdditionalGraphicMenuItem.setEnabled(fileLoaded);
 		}
 		// Обработчик, вызываемый после того, как меню исчезло с экрана
-		public void menuDeselected(MenuEvent event) {
+		public void menuDeselected(MenuEvent e) {
 		}
 		// Обработчик, вызываемый в случае отмены выбора пункта меню (очень редкая ситуация)
-		public void menuCanceled(MenuEvent event) {
+		public void menuCanceled(MenuEvent e) {
 		}
 	}
 }

@@ -22,7 +22,6 @@ public class GraphicsDisplay extends JPanel {
 	// Флаговые переменные, задающие правила отображения графика
 	private boolean showAxis = true;
 	private boolean showMarkers = true;
-	private boolean showAdditionalGraphic = true;
 	// Границы диапазона пространства, подлежащего отображению
 	private double minX;
 	private double maxX;
@@ -69,11 +68,6 @@ public class GraphicsDisplay extends JPanel {
 	
 	public void setShowMarkers(boolean showMarkers) {
 		this.showMarkers = showMarkers;
-		repaint();
-	}
-	
-	public void setShowAdditionalGraphic(boolean showAddGraph) {
-		this.showAdditionalGraphic = showAddGraph;
 		repaint();
 	}
 	
@@ -150,7 +144,7 @@ public class GraphicsDisplay extends JPanel {
 		// Выбрать линию для рисования графика
 		canvas.setStroke(graphicsStroke);
 		// Выбрать цвет линии
-		canvas.setColor(Color.BLUE);
+		canvas.setColor(Color.RED);
 		/* Будем рисовать линию графика как путь, состоящий из множества сегментов (GeneralPath)
 		 * Начало пути устанавливается в первую точку графика, после чего
 		прямой соединяется со следующими точками */
@@ -167,8 +161,6 @@ public class GraphicsDisplay extends JPanel {
 		}
 		// Отобразить график
 		canvas.draw(graphics);
-		
-		
 	}
 	
 	// Отображение маркеров точек, по которым рисовался график

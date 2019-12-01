@@ -164,13 +164,12 @@ public class MainFrame extends JFrame {
 			// Доступность или недоступность элементов меню "График" определяется загруженностью данных
 			showAxisMenuItem.setEnabled(fileLoaded);
 			showMarkersMenuItem.setEnabled(fileLoaded);
-			showAdditionalGraphicMenuItem.setEnabled(fileLoaded);
 		}
 		// Обработчик, вызываемый после того, как меню исчезло с экрана
-		public void menuDeselected(MenuEvent event) {
+		public void menuDeselected(MenuEvent e) {
 		}
 		// Обработчик, вызываемый в случае отмены выбора пункта меню (очень редкая ситуация)
-		public void menuCanceled(MenuEvent event) {
+		public void menuCanceled(MenuEvent e) {
 		}
 	}
 }
