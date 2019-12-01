@@ -37,11 +37,11 @@ public class GraphicsDisplay extends JPanel {
 	private Font axisFont;
 	
 	public GraphicsDisplay() {
-		// Цвет заднего фона области отображения - белый
+		
 		setBackground(Color.WHITE);
 		// Сконструировать необходимые объекты, используемые в рисовании
 		// Перо для рисования графика
-		graphicsStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f);
+		graphicsStroke = new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, new float[] {5, 5, 10, 5, 5, 5, 20, 5, 10, 5, 5, 5}, 0.0f);
 		// Перо для рисования осей координат
 		axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
 		// Перо для рисования контуров маркеров
@@ -86,7 +86,7 @@ public class GraphicsDisplay extends JPanel {
 		minY = graphicsData[0][1];
 		maxY = minY;
 		// Найти минимальное и максимальное значение функции
-		for (int i = 1; i<graphicsData.length; i++) {
+		for (int i = 1; i < graphicsData.length; i++) {
 			if (graphicsData[i][1]<minY) 
 				minY = graphicsData[i][1];
 			if (graphicsData[i][1]>maxY) 
@@ -97,7 +97,8 @@ public class GraphicsDisplay extends JPanel {
 		double scaleX = getSize().getWidth() / (maxX - minX);
 		double scaleY = getSize().getHeight() / (maxY - minY);
 		// Шаг 5 - Чтобы изображение было неискажѐнным - масштаб должен быть одинаков
-		// Выбираем за основу минимальныйscale = Math.min(scaleX, scaleY);
+		// Выбираем за основу минимальный 
+		scale = Math.min(scaleX, scaleY);
 		// Шаг 6 - корректировка границ отображаемой области согласно выбранному масштабу
 		if (scale == scaleX) {
 			/* Если за основу был взят масштаб по оси X, значит по оси Y делений меньше,
@@ -110,7 +111,7 @@ public class GraphicsDisplay extends JPanel {
 			maxY += yIncrement;
 			minY -= yIncrement;
 		}
-		if (scale==scaleY) {
+		if (scale == scaleY) {
 			// Если за основу был взят масштаб по оси Y, действовать по аналогии
 			double xIncrement = (getSize().getWidth()/scale - (maxX - minX))/2;
 			maxX += xIncrement;
@@ -151,7 +152,7 @@ public class GraphicsDisplay extends JPanel {
 		for (int i = 0; i < graphicsData.length; i++) {
 			// Преобразовать значения (x,y) в точку на экране point
 			Point2D.Double point = xyToPoint(graphicsData[i][0], graphicsData[i][1]);
-			if (i>0) 
+			if (i > 0) 
 				// Не первая итерация цикла - вести линию в точку point
 				graphics.lineTo(point.getX(), point.getY());
 			else 
@@ -164,27 +165,36 @@ public class GraphicsDisplay extends JPanel {
 	
 	// Отображение маркеров точек, по которым рисовался график
 	protected void paintMarkers(Graphics2D canvas) {
-		// Шаг 1 - Установить специальное перо для черчения контуров маркеров
+		// Установить специальное перо для черчения контуров маркеров
 		canvas.setStroke(markerStroke);
-		// Выбрать красный цвета для контуров маркеров
-		canvas.setColor(Color.RED);
-		// Выбрать красный цвет для закрашивания маркеров внутри
-		canvas.setPaint(Color.RED);
-		// Шаг 2 - Организовать цикл по всем точкам графика
+		boolean intIsRoot;
+		GeneralPath marker = new GeneralPath(); 
+		// Организовать цикл по всем точкам графика
 		for (Double[] point: graphicsData) {
-			// Инициализировать эллипс как объект для представления маркера
-			Ellipse2D.Double marker = new Ellipse2D.Double();
-			// Эллипс будет задаваться посредством указания координат его центра и угла прямоугольника, в который он вписан
-			// Центр - в точке (x,y)
+			
+			int integer = point[1].intValue();
+			double i = Math.sqrt(integer);
+			if (i == (int)i)
+				intIsRoot = true;
+			else intIsRoot = false;
+			
 			Point2D.Double center = xyToPoint(point[0], point[1]);
-			// Угол прямоугольника - отстоит на расстоянии (3,3)
-			Point2D.Double corner = shiftPoint(center, 3, 3);
-			// Задать эллипс по центру и диагонали
-			marker.setFrameFromCenter(center, corner);
+			marker.moveTo(center.getX() - 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX() + 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX(), center.getY() - 5.5);
+			marker.closePath();
+			
+			if (intIsRoot) {
+				canvas.setColor(Color.RED);
+	    		canvas.setPaint(Color.RED);
+			}
+			else {
+				canvas.setColor(Color.BLACK);
+	    		canvas.setPaint(Color.BLACK);
+			}
+			
 			canvas.draw(marker);
-			// Начертить контур маркера
 			canvas.fill(marker);
-			// Залить внутреннюю область маркера
 		}
 	}
 	
@@ -227,7 +237,7 @@ public class GraphicsDisplay extends JPanel {
 			canvas.drawString("y", (float)labelPos.getX() + 10, (float)(labelPos.getY() - bounds.getY()));
 		}
 		// Определить, должна ли быть видна ось X на графике
-		if (minY<=0.0 && maxY>=0.0) {
+		if (minY <= 0.0 && maxY >= 0.0) {
 			// Она должна быть видна, если верхняя граница показываемой области (maxX) >= 0.0,
 			// а нижняя (minY) <= 0.0
 			canvas.draw(new Line2D.Double(xyToPoint(minX, 0), xyToPoint(maxX, 0)));

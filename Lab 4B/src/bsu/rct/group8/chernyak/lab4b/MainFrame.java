@@ -21,7 +21,7 @@ import javax.swing.event.MenuListener;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-	// Начальные размеры окна приложения
+	
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
 	// Объект диалогового окна для выбора файлов
@@ -35,21 +35,21 @@ public class MainFrame extends JFrame {
 	private boolean fileLoaded = false;
 
 	public MainFrame() {
-		// Вызов конструктора предка Frame
+		
 		super("Построение графиков функций на основе заранее подготовленных файлов");
-		// Установка размеров окна
 		setSize(WIDTH, HEIGHT);
 		Toolkit kit = Toolkit.getDefaultToolkit();
-		// Отцентрировать окно приложения на экране
 		setLocation((kit.getScreenSize().width - WIDTH)/2, (kit.getScreenSize().height - HEIGHT)/2);
 		// Развѐртывание окна на весь экран
 		setExtendedState(MAXIMIZED_BOTH);
-		// Создать и установить полосу меню
+		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
-		// Добавить пункт меню "Файл"
 		JMenu fileMenu = new JMenu("Файл");
 		menuBar.add(fileMenu);
+		JMenu graphicsMenu = new JMenu("График");
+		menuBar.add(graphicsMenu);
+		
 		// Создать действие по открытию файла
 		Action openGraphicsAction = new AbstractAction("Открыть файл с графиком") {
 			public void actionPerformed(ActionEvent event) {
@@ -62,12 +62,8 @@ public class MainFrame extends JFrame {
 			}
 		};
 		
-		// Добавить соответствующий элемент меню
 		fileMenu.add(openGraphicsAction);
-		// Создать пункт меню "График"
-		JMenu graphicsMenu = new JMenu("График");
-		menuBar.add(graphicsMenu);
-	
+		
 		// Создать действие для реакции на активацию элемента "Показывать оси координат"
 		Action showAxisAction = new AbstractAction("Показывать оси координат") {
 			public void actionPerformed(ActionEvent event) {
@@ -78,10 +74,9 @@ public class MainFrame extends JFrame {
 		};
 
 		showAxisMenuItem = new JCheckBoxMenuItem(showAxisAction);
-		// Добавить соответствующий элемент в меню
 		graphicsMenu.add(showAxisMenuItem);
-		// Элемент по умолчанию включен (отмечен флажком)
 		showAxisMenuItem.setSelected(true);
+		
 		// Повторить действия для элемента "Показывать маркеры точек"
 		Action showMarkersAction = new AbstractAction("Показывать маркеры точек") {
 			public void actionPerformed(ActionEvent event) {
@@ -92,11 +87,10 @@ public class MainFrame extends JFrame {
 		
 		showMarkersMenuItem = new JCheckBoxMenuItem(showMarkersAction);
 		graphicsMenu.add(showMarkersMenuItem);
-		// Элемент по умолчанию включен (отмечен флажком)
 		showMarkersMenuItem.setSelected(true);
 		// Зарегистрировать обработчик событий, связанных с меню "График"
 		graphicsMenu.addMenuListener(new GraphicsMenuListener());
-		// Установить GraphicsDisplay в цент граничной компоновки
+		// Установить GraphicsDisplay в центр граничной компоновки
 		getContentPane().add(display, BorderLayout.CENTER);
 	}
 	
@@ -111,8 +105,7 @@ public class MainFrame extends JFrame {
 			 * Всего байт в потоке - in.available() байт;
 			 * Размер одного числа Double - Double.SIZE бит, или Double.SIZE/8 байт;
 			 * Так как числа записываются парами, то число пар меньше в 2 раза */
-			Double[][] graphicsData = new
-					Double[in.available()/(Double.SIZE/8)/2][];
+			Double[][] graphicsData = new Double[in.available()/(Double.SIZE/8)/2][];
 			// Шаг 3 - Цикл чтения данных (пока в потоке есть данные)
 			int i = 0;
 			while (in.available() > 0) {
@@ -124,7 +117,7 @@ public class MainFrame extends JFrame {
 				graphicsData[i++] = new Double[] {x, y};
 			}
 			// Шаг 4 - Проверка, имеется ли в списке в результате чтения хотя бы одна пара координат
-			if (graphicsData!=null && graphicsData.length>0) {
+			if (graphicsData != null && graphicsData.length > 0) {
 				// Да - установить флаг загруженности данных
 				fileLoaded = true;
 				// Вызывать метод отображения графика
@@ -140,8 +133,7 @@ public class MainFrame extends JFrame {
 		} 
 		catch (IOException exeption) {
 			// В случае ошибки ввода из файлового потока показать сообщение об ошибке
-			JOptionPane.showMessageDialog(MainFrame.this, "Ошибка чтения координат точек из файла", "Ошибка загрузки данных",
-					JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(MainFrame.this, "Ошибка чтения координат точек из файла", "Ошибка загрузки данных", JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 	}
@@ -156,7 +148,7 @@ public class MainFrame extends JFrame {
 	// Класс-слушатель событий, связанных с отображением меню
 	private class GraphicsMenuListener implements MenuListener {
 		// Обработчик, вызываемый перед показом меню
-		public void menuSelected(MenuEvent e) {
+		public void menuSelected(MenuEvent event) {
 			// Доступность или недоступность элементов меню "График" определяется загруженностью данных
 			showAxisMenuItem.setEnabled(fileLoaded);
 			showMarkersMenuItem.setEnabled(fileLoaded);
