@@ -202,36 +202,37 @@ public class GraphicsDisplay extends JPanel {
 	protected void paintMarkers(Graphics2D canvas) {
 		// Установить специальное перо для черчения контуров маркеров
 		canvas.setStroke(markerStroke);
-		boolean intIsRoot;
+		//boolean intIsRoot;
+		GeneralPath marker = new GeneralPath(); 
 		// Организовать цикл по всем точкам графика
 		for (Double[] point : graphicsData) {
 			
-			GeneralPath marker = new GeneralPath(); 
-			Point2D.Double center = xyToPoint(point[0], point[1]);
-			marker.moveTo(center.getX() - 5.5, center.getY() + 5.5);
-			marker.lineTo(center.getX() + 5.5, center.getY() + 5.5);
-			marker.lineTo(center.getX(), center.getY() - 5.5);
-			marker.closePath();
-			
+			boolean intIsRoot = false;
 			int integer = point[1].intValue();
 			double i = Math.sqrt(integer);
 			if (i == (int)i)
 				intIsRoot = true;
 			else intIsRoot = false;
 			
-			//System.out.println (point[1]);
-			//System.out.println (integer);
-			//System.out.println (i);
-			//System.out.println (intIsRoot);
-			//System.out.println ("==========================");
-		
+			System.out.println (point[1]);
+			System.out.println (integer);
+			System.out.println (i);
+			System.out.println (intIsRoot);
+			System.out.println ("==========================");
+			
+			Point2D.Double center = xyToPoint(point[0], point[1]);
+			marker.moveTo(center.getX() - 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX() + 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX(), center.getY() - 5.5);
+			marker.closePath();
+			
 			if (intIsRoot) {
 				canvas.setColor(Color.RED);
 	    		canvas.setPaint(Color.RED);
 			}
 			else {
-				canvas.setColor(Color.DARK_GRAY);
-	    		canvas.setPaint(Color.DARK_GRAY);
+				canvas.setColor(Color.BLACK);
+	    		canvas.setPaint(Color.BLACK);
 			}
 			
 			canvas.draw(marker);
@@ -262,9 +263,9 @@ public class GraphicsDisplay extends JPanel {
 			Point2D.Double lineEnd = xyToPoint(0, maxY);
 			arrow.moveTo(lineEnd.getX(), lineEnd.getY());
 			// Вести левый "скат" стрелки в точку с относительными координатами (5,20)
-			arrow.lineTo(arrow.getCurrentPoint().getX() + 5, arrow.getCurrentPoint().getY()+20);
+			arrow.lineTo(arrow.getCurrentPoint().getX()+5, arrow.getCurrentPoint().getY()+20);
 			// Вести нижнюю часть стрелки в точку с относительными координатами (-10, 0)
-			arrow.lineTo(arrow.getCurrentPoint().getX() - 10, arrow.getCurrentPoint().getY());
+			arrow.lineTo(arrow.getCurrentPoint().getX()-10, arrow.getCurrentPoint().getY());
 			// Замкнуть треугольник стрелки
 			arrow.closePath();
 			canvas.draw(arrow); // Нарисовать стрелку

@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Stroke;
 import java.awt.font.FontRenderContext;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -33,7 +34,6 @@ public class GraphicsDisplay extends JPanel {
 	// Различные стили черчения линий
 	private BasicStroke graphicsStroke;
 	private BasicStroke axisStroke;
-	private BasicStroke additionalGraphicsStroke;
 	private BasicStroke markerStroke;
 	// Различные шрифты отображения надписей
 	private Font axisFont;
@@ -44,7 +44,6 @@ public class GraphicsDisplay extends JPanel {
 		// Сконструировать необходимые объекты, используемые в рисовании
 		// Перо для рисования графика
 		graphicsStroke = new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, new float[] {5, 5, 10, 5, 5, 5, 20, 5, 10, 5, 5, 5}, 0.0f);
-		additionalGraphicsStroke = new BasicStroke(5.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 10.0f, new float[] {20, 5, 20, 5, 20, 5, 5, 5, 5, 5, 5, 5}, 0.0f);
 		// Перо для рисования осей координат
 		axisStroke = new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
 		// Перо для рисования контуров маркеров
@@ -138,13 +137,15 @@ public class GraphicsDisplay extends JPanel {
 		// Затем отображается сам график
 		paintGraphics(canvas);
 		// Затем (если нужно) отображаются маркеры точек, по которым строился график.
-		if (showAdditionalGraphic) paintAdditionalGraphic(canvas);
 		if (showMarkers) paintMarkers(canvas);
+		if (showAdditionalGraphic) paintAdditionalGraphic(canvas);
 		// Шаг 9 - Восстановить старые настройки холста
 		canvas.setFont(oldFont);
 		canvas.setPaint(oldPaint);
 		canvas.setColor(oldColor);
 		canvas.setStroke(oldStroke);
+		
+		
 	}
 	
 	// Отрисовка графика по прочитанным координатам
@@ -174,7 +175,7 @@ public class GraphicsDisplay extends JPanel {
 	// Метод, рисующий дополнительный график функции "модуль f"
 	protected void paintAdditionalGraphic(Graphics2D canvas) {
 		
-		canvas.setStroke(additionalGraphicsStroke);
+		canvas.setStroke(graphicsStroke);
 		canvas.setColor(Color.GREEN);
 		
 		Double[][] newGraphicsData = new Double[graphicsData.length][2];
@@ -203,15 +204,9 @@ public class GraphicsDisplay extends JPanel {
 		// Установить специальное перо для черчения контуров маркеров
 		canvas.setStroke(markerStroke);
 		boolean intIsRoot;
+		GeneralPath marker = new GeneralPath(); 
 		// Организовать цикл по всем точкам графика
 		for (Double[] point : graphicsData) {
-			
-			GeneralPath marker = new GeneralPath(); 
-			Point2D.Double center = xyToPoint(point[0], point[1]);
-			marker.moveTo(center.getX() - 5.5, center.getY() + 5.5);
-			marker.lineTo(center.getX() + 5.5, center.getY() + 5.5);
-			marker.lineTo(center.getX(), center.getY() - 5.5);
-			marker.closePath();
 			
 			int integer = point[1].intValue();
 			double i = Math.sqrt(integer);
@@ -219,19 +214,19 @@ public class GraphicsDisplay extends JPanel {
 				intIsRoot = true;
 			else intIsRoot = false;
 			
-			//System.out.println (point[1]);
-			//System.out.println (integer);
-			//System.out.println (i);
-			//System.out.println (intIsRoot);
-			//System.out.println ("==========================");
-		
+			Point2D.Double center = xyToPoint(point[0], point[1]);
+			marker.moveTo(center.getX() - 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX() + 5.5, center.getY() + 5.5);
+			marker.lineTo(center.getX(), center.getY() - 5.5);
+			marker.closePath();
+			
 			if (intIsRoot) {
 				canvas.setColor(Color.RED);
 	    		canvas.setPaint(Color.RED);
 			}
 			else {
-				canvas.setColor(Color.DARK_GRAY);
-	    		canvas.setPaint(Color.DARK_GRAY);
+				canvas.setColor(Color.BLACK);
+	    		canvas.setPaint(Color.BLACK);
 			}
 			
 			canvas.draw(marker);
@@ -262,9 +257,9 @@ public class GraphicsDisplay extends JPanel {
 			Point2D.Double lineEnd = xyToPoint(0, maxY);
 			arrow.moveTo(lineEnd.getX(), lineEnd.getY());
 			// Вести левый "скат" стрелки в точку с относительными координатами (5,20)
-			arrow.lineTo(arrow.getCurrentPoint().getX() + 5, arrow.getCurrentPoint().getY()+20);
+			arrow.lineTo(arrow.getCurrentPoint().getX()+5, arrow.getCurrentPoint().getY()+20);
 			// Вести нижнюю часть стрелки в точку с относительными координатами (-10, 0)
-			arrow.lineTo(arrow.getCurrentPoint().getX() - 10, arrow.getCurrentPoint().getY());
+			arrow.lineTo(arrow.getCurrentPoint().getX()-10, arrow.getCurrentPoint().getY());
 			// Замкнуть треугольник стрелки
 			arrow.closePath();
 			canvas.draw(arrow); // Нарисовать стрелку
@@ -276,9 +271,6 @@ public class GraphicsDisplay extends JPanel {
 			Point2D.Double labelPos = xyToPoint(0, maxY);
 			// Вывести надпись в точке с вычисленными координатами
 			canvas.drawString("y", (float)labelPos.getX() + 10, (float)(labelPos.getY() - bounds.getY()));
-			//Point2D.Double coordLabelPos = xyToPoint(0, 0);
-			//Rectangle2D coordbounds = axisFont.getStringBounds("0", context);
-			//canvas.drawString("0", (float)coordLabelPos.getX() - 25, (float)(coordLabelPos.getY() - coordbounds.getY()));
 		}
 		// Определить, должна ли быть видна ось X на графике
 		if (minY <= 0.0 && maxY >= 0.0) {
@@ -306,7 +298,6 @@ public class GraphicsDisplay extends JPanel {
 			// Вывести надпись в точке с вычисленными координатами
 			canvas.drawString("x", (float)(labelPos.getX() - bounds.getWidth() - 10), (float)(labelPos.getY() + bounds.getY()));
 		}
-		
 	}
 	
 	/* Метод-помощник, осуществляющий преобразование координат.
