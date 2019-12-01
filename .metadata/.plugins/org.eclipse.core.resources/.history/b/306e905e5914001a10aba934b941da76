@@ -143,9 +143,8 @@ public class GraphicsDisplay extends JPanel {
 		canvas.setPaint(oldPaint);
 		canvas.setColor(oldColor);
 		canvas.setStroke(oldStroke);
-		
-		if (showAdditionalGraphic) paintAdditionalGraphic(canvas);
 	}
+	
 	
 	// Отрисовка графика по прочитанным координатам
 	protected void paintGraphics(Graphics2D canvas) {
@@ -169,33 +168,8 @@ public class GraphicsDisplay extends JPanel {
 		}
 		// Отобразить график
 		canvas.draw(graphics);
-	}
-	
-	// Метод, рисующий дополнительный график функции "модуль f"
-	protected void paintAdditionalGraphic(Graphics2D canvas) {
 		
-		canvas.setStroke(graphicsStroke);
-		canvas.setColor(Color.GREEN);
 		
-		Double[][] newGraphicsData = new Double[graphicsData.length][2];
-		for (int i = 0; i < graphicsData.length; i++) {
-			if (graphicsData[i][1] < 0.0)
-				newGraphicsData[i][1] = Math.abs(graphicsData[i][1]);
-			else 
-				newGraphicsData[i][1] = graphicsData[i][1];
-		}
-		for (int i = 0; i < graphicsData.length; i++)
-			newGraphicsData[i][0] = graphicsData[i][0];
-		
-		GeneralPath newGraphics = new GeneralPath();
-		for (int i = 0; i < newGraphicsData.length; i++) {
-			Point2D.Double point = xyToPoint(newGraphicsData[i][0], newGraphicsData[i][1]);
-			if (i > 0) 
-				newGraphics.lineTo(point.getX(), point.getY());
-			else 
-				newGraphics.moveTo(point.getX(), point.getY());
-		}
-		canvas.draw(newGraphics);
 	}
 	
 	// Отображение маркеров точек, по которым рисовался график
@@ -205,7 +179,7 @@ public class GraphicsDisplay extends JPanel {
 		boolean intIsRoot;
 		GeneralPath marker = new GeneralPath(); 
 		// Организовать цикл по всем точкам графика
-		for (Double[] point : graphicsData) {
+		for (Double[] point: graphicsData) {
 			
 			int integer = point[1].intValue();
 			double i = Math.sqrt(integer);
