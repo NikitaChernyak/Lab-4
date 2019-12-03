@@ -37,6 +37,7 @@ public class GraphicsDisplay extends JPanel {
 	private BasicStroke markerStroke;
 	// Различные шрифты отображения надписей
 	private Font axisFont;
+	private Font _01Font;
 	
 	public GraphicsDisplay() {
 		
@@ -51,6 +52,7 @@ public class GraphicsDisplay extends JPanel {
 		markerStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, null, 0.0f);
 		// Шрифт для подписей осей координат
 		axisFont = new Font("Serif", Font.BOLD, 30);
+		_01Font = new Font("Serif", Font.BOLD, 20);
 	}
 	
 	// Данный метод вызывается из обработчика элемента меню "Открыть файл с графиком"
@@ -219,12 +221,6 @@ public class GraphicsDisplay extends JPanel {
 				intIsRoot = true;
 			else intIsRoot = false;
 			
-			//System.out.println (point[1]);
-			//System.out.println (integer);
-			//System.out.println (i);
-			//System.out.println (intIsRoot);
-			//System.out.println ("==========================");
-		
 			if (intIsRoot) {
 				canvas.setColor(Color.RED);
 	    		canvas.setPaint(Color.RED);
@@ -248,9 +244,29 @@ public class GraphicsDisplay extends JPanel {
 		// Стрелки заливаются чѐрным цветом
 		canvas.setPaint(Color.BLACK);
 		// Подписи к координатным осям делаются специальным шрифтом
-		canvas.setFont(axisFont);
+		canvas.setFont(_01Font);
 		// Создать объект контекста отображения текста - для получения характеристик устройства (экрана)
 		FontRenderContext context = canvas.getFontRenderContext();
+		
+		GeneralPath lineY = new GeneralPath();
+		GeneralPath lineX = new GeneralPath();
+		
+		// 1x и 1y
+		Point2D.Double _1y = xyToPoint(0, 1);
+		Point2D.Double _1x = xyToPoint(1, 0);
+		
+		lineY.moveTo(_1y.getX() - 10 , _1y.getY());
+		lineY.lineTo(lineY.getCurrentPoint().getX() + 20, lineY.getCurrentPoint().getY());
+		canvas.draw(lineY);
+		
+		lineX.moveTo(_1x.getX(), _1x.getY() - 10);
+		lineX.lineTo(lineX.getCurrentPoint().getX(), lineX.getCurrentPoint().getY() + 20);
+		canvas.draw(lineX);
+		
+		Rectangle2D xybounds = axisFont.getStringBounds("1", context);
+		canvas.drawString("1", (float)_1y.getX() - 25, (float)(_1y.getY() - xybounds.getY()) - 21);
+		canvas.drawString("1", (float)_1x.getX() - 15, (float)(_1x.getY() - xybounds.getY()) - 32);
+
 		// Определить, должна ли быть видна ось Y на графике
 		if (minX <= 0.0 && maxX >= 0.0) {
 			// Она должна быть видна, если левая граница показываемой области (minX) <= 0.0,// а правая (maxX) >= 0.0
@@ -272,13 +288,14 @@ public class GraphicsDisplay extends JPanel {
 			// Закрасить стрелку
 			// Нарисовать подпись к оси Y
 			// Определить, сколько места понадобится для надписи "y"
+			Point2D.Double coordLabelPos = xyToPoint(0, 0);
+			Rectangle2D coordbounds = axisFont.getStringBounds("0", context);
+			canvas.drawString("0", (float)coordLabelPos.getX() - 20, (float)(coordLabelPos.getY() - coordbounds.getY()) - 5);
+			canvas.setFont(axisFont);
 			Rectangle2D bounds = axisFont.getStringBounds("y", context);
 			Point2D.Double labelPos = xyToPoint(0, maxY);
 			// Вывести надпись в точке с вычисленными координатами
 			canvas.drawString("y", (float)labelPos.getX() + 10, (float)(labelPos.getY() - bounds.getY()));
-			//Point2D.Double coordLabelPos = xyToPoint(0, 0);
-			//Rectangle2D coordbounds = axisFont.getStringBounds("0", context);
-			//canvas.drawString("0", (float)coordLabelPos.getX() - 25, (float)(coordLabelPos.getY() - coordbounds.getY()));
 		}
 		// Определить, должна ли быть видна ось X на графике
 		if (minY <= 0.0 && maxY >= 0.0) {
