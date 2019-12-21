@@ -13,7 +13,11 @@
 		</list>
 	</section>
 	<section name="WorkbenchPreferenceDialogSettings">
+<<<<<<< HEAD
 		<item key="DIALOG_X_ORIGIN" value="362"/>
+=======
+		<item key="DIALOG_X_ORIGIN" value="188"/>
+>>>>>>> 239d160c05ecf52e7f0c22e62f5ee013c69a5a30
 		<item key="DIALOG_Y_ORIGIN" value="0"/>
 	</section>
 </section>

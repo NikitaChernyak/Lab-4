@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<<<<<<< HEAD
         <listEntry value="/lab5/src/bsu/rct/group8/chernyak/lab5/MainFrame.java"/>
+=======
+        <listEntry value="/Lab 4B/src/bsu/rct/group8/chernyak/lab4b/MainFrame.java"/>
+>>>>>>> 239d160c05ecf52e7f0c22e62f5ee013c69a5a30
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
     </listAttribute>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_EXCLUDE_TEST_CODE" value="true"/>
+<<<<<<< HEAD
     <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="bsu.rct.group8.chernyak.lab5.MainFrame"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="lab5"/>
+=======
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="bsu.rct.group8.chernyak.lab4b.MainFrame"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="Lab 4B"/>
+>>>>>>> 239d160c05ecf52e7f0c22e62f5ee013c69a5a30
 </launchConfiguration>

@@ -1,3 +1,9 @@
+<<<<<<< HEAD
 INDEX VERSION 1.131+/home/nikita/Documents/2 курс/Proga/Labs/lab5new/.metadata/.plugins/org.eclipse.jdt.core
 646308851.index
 3157158754.index
+=======
+INDEX VERSION 1.131+/home/nikita/Documents/2 курс/Proga/Labs/lab4B/.metadata/.plugins/org.eclipse.jdt.core
+4073433282.index
+646308851.index
+>>>>>>> 239d160c05ecf52e7f0c22e62f5ee013c69a5a30
